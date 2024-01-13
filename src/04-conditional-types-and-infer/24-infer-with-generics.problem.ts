@@ -1,5 +1,7 @@
 import { Equal, Expect } from "../helpers/type-utils";
 
+import { E } from "vitest/dist/reporters-qc5Smpt5";
+
 interface MyComplexInterface<Event, Context, Name, Point> {
   getEvent: () => Event;
   getContext: () => Context;
@@ -14,6 +16,13 @@ type Example = MyComplexInterface<
   { x: 12; y: 14 }
 >;
 
-type GetPoint<T> = unknown;
+type GetPoint<T> = T extends MyComplexInterface<
+  infer E,
+  infer C,
+  infer N,
+  infer Point
+>
+  ? Point
+  : never;
 
 type tests = [Expect<Equal<GetPoint<Example>, { x: 12; y: 14 }>>];
